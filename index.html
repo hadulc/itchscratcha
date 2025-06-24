@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MMA Title Fights Per Year</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f7f7f7; margin: 0; padding: 0; }
+        .container { max-width: 700px; margin: 60px auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 40px; }
+        h1 { color: #222; }
+        p { color: #444; }
+        .footer { margin-top: 40px; color: #888; font-size: 0.95em; }
+    </style>
+    <!-- Latest Plotly.js CDN -->
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+    <!-- Latest d3 (includes d3-fetch) -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>MMA Title Fights Per Year</h1>
+        <p>This page loads the sum and average of title fights per year from a CSV file and displays them as separate line charts using Plotly.js.</p>
+        <div id="sum-chart" style="width:100%;max-width:700px;height:400px;margin:40px auto;"></div>
+        <div id="avg-chart" style="width:100%;max-width:700px;height:400px;margin:40px auto;"></div>
+        <div class="footer">&copy; 2025 MMA Data Project</div>
+    </div>
+    <script>
+        // Fetch the CSV data and plot sum and avg columns
+        d3.csv('title_fights_per_year.csv').then(function(data) {
+            var years = data.map(row => row.year);
+            var sum = data.map(row => +row.sum);
+            var avg = data.map(row => +row.avg);
+            // Sum chart
+            var sumTrace = {
+                x: years,
+                y: sum,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Sum',
+                marker: {color: '#1f77b4'}
+            };
+            var sumLayout = {
+                title: 'Number of UFC Title Fights per Year',
+                xaxis: {title: 'Year'},
+                yaxis: {title: 'Sum'},
+                plot_bgcolor: '#f7f7f7',
+                paper_bgcolor: '#fff'
+            };
+            Plotly.newPlot('sum-chart', [sumTrace], sumLayout, {responsive: true});
+            // Average chart
+            var avgTrace = {
+                x: years,
+                y: avg,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Average',
+                marker: {color: '#ff7f0e'}
+            };
+            var avgLayout = {
+                title: 'Average Number of UFC Title Fights per Active Weight Class',
+                xaxis: {title: 'Year'},
+                yaxis: {title: 'Average'},
+                plot_bgcolor: '#f7f7f7',
+                paper_bgcolor: '#fff'
+            };
+            Plotly.newPlot('avg-chart', [avgTrace], avgLayout, {responsive: true});
+        });
+    </script>
+</body>
+</html>
